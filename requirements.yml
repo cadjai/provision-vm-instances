@@ -1,0 +1,5 @@
+
+- src: https://github.com/cadjai/provision-ovirt-vm-with-disks.git 
+  scm: git
+  name: provision-ovirt-vms
+

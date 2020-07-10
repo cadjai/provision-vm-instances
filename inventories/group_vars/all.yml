@@ -1,0 +1,21 @@
+---
+ovirt_host: 
+ovirt_admin_pw: 
+vm_template: 
+ovirt_cluster: 
+ovirt_storage_domain: 
+vm_memory: 2048 MiB
+vm_cpu: 1
+vm_cpucores: 1
+vm_os: rhel_7x64
+dns_server: 
+dns_search: 
+vm_dns_search: 
+nic_boot_proto: dhcp
+base_domain: 
+vm_host_subdomain: ocp
+vm_rootpw: 
+vm_user: root
+attach_additional_disks: true
+additional_disks:
+  - { name: docker, size: 30GiB }

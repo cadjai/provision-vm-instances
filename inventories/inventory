@@ -1,0 +1,19 @@
+[masters]
+ocp-master[1:3]	ansible_connection=local
+
+[infras]
+ocp-infra[1:3]	ansible_connection=local
+
+[apps]
+ocp-app[1:3]	ansible_connection=local
+
+[lb]
+ocp-lb1	ansible_connection=local
+
+[registry]
+ocp-regisry1	ansible_connection=local
+
+[dns]
+
+[glusterfs]
+ocp-gluster[1:4]	ansible_connection=local

@@ -1,0 +1,5 @@
+---
+attach_additional_disks: true
+additional_disks:
+  - { name: docker, size: 30GiB }
+  - { name: gluster, size: 50GiB }

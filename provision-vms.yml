@@ -1,0 +1,65 @@
+---
+- hosts: all
+  gather_facts: no
+  tasks:
+    - setup:
+
+- hosts: localhost
+  gather_facts: no
+  tasks:
+   - add_host:
+       groups: newinstances
+       hostname: "{{ item }}"
+       vm_hostname: "{{ item }}"
+       inventory_dir: "{{ hostvars[item].inventory_dir }}"
+       ovirt_host: "{{ hostvars[item].ovirt_host }}"
+       ovirt_admin_pw: "{{ hostvars[item].ovirt_admin_pw }}"
+       vm_template: "{{ hostvars[item].vm_template }}"
+       ovirt_cluster: "{{ hostvars[item].ovirt_cluster }}"
+       ovirt_storage_domain: "{{ hostvars[item].ovirt_storage_domain }}"
+       vm_memory: "{{ hostvars[item].vm_memory }}"
+       vm_cpucores: "{{ hostvars[item].vm_cpucores }}"
+       vm_cpu: "{{ hostvars[item].vm_cpu }}"
+       vm_os: "{{ hostvars[item].vm_os }}"
+       dns_server: "{{ hostvars[item].dns_server }}"
+       vm_dns_search: "{{ hostvars[item].vm_dns_search }}"
+       nic_boot_proto: "{{ hostvars[item].nic_boot_proto }}"
+       base_domain: "{{ hostvars[item].base_domain }}"
+       vm_host_subdomain: "{{ hostvars[item].vm_host_subdomain }}"
+       vm_rootpw: "{{ hostvars[item].vm_rootpw }}"
+       vm_user: "{{ hostvars[item].vm_user }}"
+       attach_additional_disks: "{{ hostvars[item].attach_additional_disks }}"
+       additional_disks: "{{ hostvars[item].additional_disks }}"
+     with_items: '{{ groups.all }}'
+
+- hosts: localhost 
+  gather_facts: false
+  pre_tasks:
+  - name: Install necessary requirement for OvirtSDK 
+    pip:
+      name: ovirt-engine-sdk-python
+
+  tasks:
+  - name: Ovirt creds
+    ovirt_auth:    
+      url: "https://{{ ovirt_host }}/ovirt-engine/api"
+      username: admin@internal
+      password: "{{ ovirt_admin_pw }}"
+    delegate_to: 127.0.0.1
+    run_once: true
+
+  - name: Include VM and Disks provisioning tasks
+    include_role: 
+      name: provision-ovirt-vms
+    vars:
+      instance: "{{ newinstance }}"
+    loop: "{{ groups.newinstances }}"
+    loop_control:
+      loop_var: newinstance
+
+  - name: Revoke SSO token
+    ovirt_auth:
+      state: absent
+      ovirt_auth: "{{ ovirt_auth }}"
+    delegate_to: 127.0.0.1
+    run_once: true
