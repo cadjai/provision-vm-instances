@@ -19,3 +19,8 @@ vm_user: root
 attach_additional_disks: true
 additional_disks:
   - { name: docker, size: 30GiB }
+generate_sshkey: false
+use_sshkey: false
+sshkey_filename:
+sshkey_file_dir:
+remove_existing_vms: false
