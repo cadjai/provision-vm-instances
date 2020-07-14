@@ -40,6 +40,23 @@
       name: ovirt-engine-sdk-python
 
   tasks:
+  - name: Set SSH KEy File Facts
+    set_fact:
+      id_rsa_user: "{{ 'id_rsa_' + vm_user }}"
+      sshkey_file_dir: "{{ sshkey_file_dir | default('/tmp') }}"
+      sshkey_filename: "{{ sshkey_filename | default(id_rsa_user) }}"
+
+  - name: Provision SSH Key if appropriate
+    openssh_keypair:
+      path: "{{ sshkey_file_dir }}/{{ sshkey_filename }}"
+      type: rsa
+      size: 4096
+      state: present
+      force: yes 
+    when:
+      - generate_sshkey is defined
+      - generate_sshkey | bool
+
   - name: Ovirt creds
     ovirt_auth:    
       url: "https://{{ ovirt_host }}/ovirt-engine/api"
